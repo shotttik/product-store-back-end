@@ -67,22 +67,29 @@ namespace WebApplication1.Controllers.Store
                         }
                         dbProduct.Quantity = dbProduct.Quantity - p.Quantity;
                         sum = (int)(sum + dbProduct.Price * p.Quantity);
-                        // adding user product
-                        /*var cmd = new SqlCommand(
-                                 """
-                                 INSERT INTO UserProducts (ID_user, ID_product, Quantity) values (@UserID, @ID, @Quantity)
-                                """);
-                        cmd.Parameters.Add(new SqlParameter("UserID", userID));
-                        cmd.Parameters.Add(new SqlParameter("ID", p.ID));
-                        cmd.Parameters.Add(new SqlParameter("Quantity", p.Quantity));
 
-                        _context.Database.ExecuteSql(cmd);*/
-                        Console.WriteLine(userID);
-                        Console.WriteLine(p.ID);
-                        _context.Database.ExecuteSql($"INSERT INTO UserProduct (ID_user, ID_product, Quantity) values ({userID}, {p.ID}, {p.Quantity})");
+                        var dbUserProduct = _context.UserProduct.SingleOrDefault(up=> up.ID_product == p.ID);
+                        if (dbUserProduct != null)
+                        {
+                            dbUserProduct.Quantity += p.Quantity;
+                        }
+                        else
+                        {
+                            UserProduct newUP = new UserProduct();
+                            newUP.ID_product = dbProduct.ID;
+                            newUP.Quantity = p.Quantity;
+                            newUP.ID_user = userID;
+                            _context.UserProduct.Add(newUP);
+                        }
                     }
                 });
             });
+            //Coupon Check
+            var dbCoupon = await _context.Coupon.SingleOrDefaultAsync(c => c.Code == transactions.Coupon);
+            if(dbCoupon != null && dbCoupon.EndDate < DateTime.Now)
+            {
+                somethingWrong = true;
+            }
             // when user tries to buy more product than they are in db!
             if (somethingWrong)
             {
@@ -91,11 +98,9 @@ namespace WebApplication1.Controllers.Store
                 Response.StatusCode = 400;
                 return JsonConvert.SerializeObject(response);
             }
-            //Coupon Check
-            var dbCoupon = await _context.Coupon.SingleOrDefaultAsync(c => c.Code == transactions.Coupon);
             if(transactions.Coupon != "")
             {
-                sum = sum * dbCoupon.Discount / 100;
+                sum = sum - (sum * dbCoupon.Discount / 100);
 
             }
             // compare sum and paid

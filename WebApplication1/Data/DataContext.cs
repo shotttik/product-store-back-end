@@ -11,6 +11,7 @@ namespace WebApplication1.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserProduct> UserProduct { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,7 +28,6 @@ namespace WebApplication1.Data
                 .HasForeignKey(up => up.ID_product);
 
         }
-
         public DbSet<Coupon> Coupon { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
     }
