@@ -12,6 +12,7 @@ namespace WebApplication1.Models
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public User User { get; set; }
         public string ProductS { get; set; }
+        public int? CouponID { get; set; }
         public Coupon? Coupon { get; set; }
     }
 }

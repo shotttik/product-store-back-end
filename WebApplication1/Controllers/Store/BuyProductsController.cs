@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers.Store
         {
             var userID = Int32.Parse(_userService.GetUserData());
             var dbUser = await _context.Users.FindAsync(userID);
-            var sum = 0;
+            decimal sum = 0;
 
             List<int> productIDS = new List<int>();
             transactions.Products.ForEach(p => productIDS.Add(p.ID));
@@ -66,7 +66,7 @@ namespace WebApplication1.Controllers.Store
                             return;
                         }
                         dbProduct.Quantity = dbProduct.Quantity - p.Quantity;
-                        sum = (int)(sum + dbProduct.Price * p.Quantity);
+                        sum = (decimal)(sum + dbProduct.Price * p.Quantity);
 
                         var dbUserProduct = _context.UserProduct.SingleOrDefault(up=> up.ID_product == p.ID);
                         if (dbUserProduct != null)
@@ -86,7 +86,7 @@ namespace WebApplication1.Controllers.Store
             });
             //Coupon Check
             var dbCoupon = await _context.Coupon.SingleOrDefaultAsync(c => c.Code == transactions.Coupon);
-            if(dbCoupon != null && dbCoupon.EndDate < DateTime.Now)
+            if(dbCoupon != null && dbCoupon.EndDate < DateTime.Now && !dbCoupon.IsUsed)
             {
                 somethingWrong = true;
             }
@@ -98,11 +98,13 @@ namespace WebApplication1.Controllers.Store
                 Response.StatusCode = 400;
                 return JsonConvert.SerializeObject(response);
             }
+                Console.WriteLine(sum);
             if(transactions.Coupon != "")
             {
                 sum = sum - (sum * dbCoupon.Discount / 100);
 
             }
+            Console.WriteLine(transactions.Paid);
             // compare sum and paid
             if(sum != transactions.Paid)
             {
@@ -114,6 +116,7 @@ namespace WebApplication1.Controllers.Store
 
             //everything okay lets save to db
             dbUser.Balance -= transactions.Paid;
+            dbCoupon.IsUsed = true;
             Transaction t = new Transaction();
             t.Paid = transactions.Paid;
             t.User = dbUser;

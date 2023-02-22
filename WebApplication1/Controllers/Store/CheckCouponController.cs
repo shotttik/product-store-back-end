@@ -26,7 +26,14 @@ namespace WebApplication1.Controllers.Store
             if(dbCoupon.EndDate < DateTime.Now)
             {
                 response.Status = "Error";
-                response.Message = "Coupon Expired";
+                response.Message = "Coupon expired";
+                Response.StatusCode = 400;
+                return JsonConvert.SerializeObject(response);
+            };
+            if (dbCoupon.IsUsed)
+            {
+                response.Status = "Error";
+                response.Message = "Coupon already used";
                 Response.StatusCode = 400;
                 return JsonConvert.SerializeObject(response);
             };
