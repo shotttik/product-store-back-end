@@ -84,27 +84,30 @@ namespace WebApplication1.Controllers.Store
                     }
                 });
             });
+            Transaction t = new Transaction();
+
             //Coupon Check
             var dbCoupon = await _context.Coupon.SingleOrDefaultAsync(c => c.Code == transactions.Coupon);
-            if(dbCoupon != null && dbCoupon.EndDate < DateTime.Now && !dbCoupon.IsUsed)
+            if(dbCoupon != null && (dbCoupon.EndDate < DateTime.Now || dbCoupon.IsUsed))
             {
                 somethingWrong = true;
             }
+
             // when user tries to buy more product than they are in db!
             if (somethingWrong)
             {
                 response.Status = "Error";
-                response.Message = "not enough product in db";
+                response.Message = "Something went wrong with coupon";
                 Response.StatusCode = 400;
                 return JsonConvert.SerializeObject(response);
             }
-                Console.WriteLine(sum);
             if(transactions.Coupon != "")
             {
                 sum = sum - (sum * dbCoupon.Discount / 100);
+                dbCoupon.IsUsed = true;
+                t.Coupon = dbCoupon;
 
             }
-            Console.WriteLine(transactions.Paid);
             // compare sum and paid
             if(sum != transactions.Paid)
             {
@@ -116,12 +119,10 @@ namespace WebApplication1.Controllers.Store
 
             //everything okay lets save to db
             dbUser.Balance -= transactions.Paid;
-            dbCoupon.IsUsed = true;
-            Transaction t = new Transaction();
             t.Paid = transactions.Paid;
             t.User = dbUser;
             t.ProductS = transactions.Products.ToString();
-            t.Coupon = dbCoupon;
+            t.CouponID = 0;
             _context.Transaction.Add(t);
 
             await _context.SaveChangesAsync();

@@ -25,13 +25,12 @@ namespace WebApplication1.Controllers.Store
             var a = this.Configuration.GetConnectionString("MyConnection");
             var conn = new SqlConnection(a);
             conn.Open();
-
+            //instead of this do with efcore
             var cmd = new SqlCommand(
                """
-               SELECT    Products.ID, Products.Name, Products.Price, UserProducts.Quantity
-               FROM            Products INNER JOIN
-                                        UserProducts ON Products.ID = UserProducts.ID_product INNER JOIN
-                                        User ON UserProducts.ID_user = Users.ID
+               SELECT    Products.ID, Products.Name, Products.Price, UserProduct.Quantity
+               FROM            Products INNER JOIN UserProduct ON Products.ID = UserProduct.ID_product INNER JOIN
+               Users ON UserProduct.ID_user = Users.ID
                WHERE Users.ID = @id
                """,
                conn);
@@ -45,7 +44,7 @@ namespace WebApplication1.Controllers.Store
                 {                    
                     string jsonData = Utils.DataToJson(data);
                     conn.Close();
-                    Response.StatusCode = 200;
+                    Response.StatusCode = 200;  
                     return jsonData;
                 }
             }

@@ -30,11 +30,12 @@ namespace WebApplication1.Data
             builder.Entity<Coupon>()
                 .HasOne<Transaction>(c => c.Transaction)
                 .WithOne(tr => tr.Coupon)
-                .HasForeignKey<Transaction>(tr => tr.CouponID)
-                .OnDelete(DeleteBehavior.SetNull);
-        
+                .HasForeignKey<Transaction>(tr => tr.CouponID);
+
+
+
         }
-        
+
 
         public DbSet<Coupon> Coupon { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
