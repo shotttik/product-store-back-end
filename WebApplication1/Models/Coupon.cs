@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WebApplication1.Models
 {
@@ -9,7 +10,8 @@ namespace WebApplication1.Models
         public DateTime CreateDate { get; set; }
         public DateTime EndDate { get; set; }
         public int Discount { get; set; }
-        public Transaction? Transaction { get; set; }
+        [AllowNull]
+        public Transaction Transaction { get; set; }
         public Boolean IsUsed { get; set; } = false;
 
     }

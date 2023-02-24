@@ -101,7 +101,7 @@ namespace WebApplication1.Controllers.Store
                 Response.StatusCode = 400;
                 return JsonConvert.SerializeObject(response);
             }
-            if(transactions.Coupon != "")
+            if(dbCoupon != null)
             {
                 sum = sum - (sum * dbCoupon.Discount / 100);
                 dbCoupon.IsUsed = true;
@@ -122,9 +122,7 @@ namespace WebApplication1.Controllers.Store
             t.Paid = transactions.Paid;
             t.User = dbUser;
             t.ProductS = transactions.Products.ToString();
-            t.CouponID = 0;
             _context.Transaction.Add(t);
-
             await _context.SaveChangesAsync();
 
             response.Status = "Success";

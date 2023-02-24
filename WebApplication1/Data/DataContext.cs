@@ -28,9 +28,10 @@ namespace WebApplication1.Data
                 .HasForeignKey(up => up.ID_product);
 
             builder.Entity<Coupon>()
-                .HasOne<Transaction>(c => c.Transaction)
+                .HasOne(c => c.Transaction)
                 .WithOne(tr => tr.Coupon)
-                .HasForeignKey<Transaction>(tr => tr.CouponID);
+                .HasForeignKey<Transaction>(tr => tr.CouponID)
+                .OnDelete(DeleteBehavior.SetNull);
 
 
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using WebApplication1.Schemas.StoreSchemas;
 
 namespace WebApplication1.Models
@@ -12,7 +13,9 @@ namespace WebApplication1.Models
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public User User { get; set; }
         public string ProductS { get; set; }
-        public int? CouponID { get; set; } = 0;
-        public Coupon? Coupon { get; set; }
+        [AllowNull]
+        public Nullable<int> CouponID { get; set; }
+        [AllowNull]
+        public Coupon Coupon { get; set; }
     }
 }
