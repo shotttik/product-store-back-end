@@ -10,8 +10,7 @@ namespace WebApplication1.Models
         public DateTime CreateDate { get; set; }
         public DateTime EndDate { get; set; }
         public int Discount { get; set; }
-        [AllowNull]
-        public Transaction Transaction { get; set; }
+        public Transaction? Transaction { get; set; }
         public Boolean IsUsed { get; set; } = false;
 
     }

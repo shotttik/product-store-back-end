@@ -11,6 +11,7 @@ namespace WebApplication1.Models
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public int Level { get; set; } = 0;
+        public bool IsSuperUser { get; set; } = false;
         [Column(TypeName = "decimal(18,2)")]
         public decimal Balance { get; set; } = 0;
 

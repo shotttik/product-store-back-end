@@ -70,10 +70,11 @@ namespace WebApplication1.Controllers
                     }
                     int level = (int)dr["Level"];
                     int UserID = (int)dr["ID"];
+                    bool issuperuser = (bool)dr ["IsSuperUser"];
                     decimal balance = (decimal)dr["balance"];
                     response.Level = level;
                     response.UserID = UserID;
-                    string jwt = Token.CreateToken(UserID, email!, level, balance);
+                    string jwt = Token.CreateToken(UserID, email!, level, balance, issuperuser);
                     conn.Close();
                     response.Status = "Success";
                     response.Message = "Logged Successfully";

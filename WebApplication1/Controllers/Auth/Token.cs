@@ -8,7 +8,7 @@ namespace WebApplication1.Controllers.Auth
     public class Token
     {
 
-        public static string CreateToken(int id, string email, int level, decimal balance)
+        public static string CreateToken(int id, string email, int level, decimal balance, bool issuperuser)
         {
 
             List<Claim> claims = new List<Claim>
@@ -17,6 +17,7 @@ namespace WebApplication1.Controllers.Auth
                 new Claim(ClaimTypes.Email, email),
                 new Claim(ClaimTypes.Role, level.ToString()),
                 new Claim("Balance", balance.ToString()),
+                new Claim("IsSuperUser", issuperuser.ToString())
 
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
