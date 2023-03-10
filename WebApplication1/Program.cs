@@ -48,6 +48,17 @@ builder.Services.AddCors(options =>
                           });
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("SuperUser", policy =>
+    {
+        policy.RequireRole("1");
+        policy.RequireClaim("IsSuperUser", "True");
+        policy.Build();
+    }
+          ); 
+});
+
 var app = builder.Build();
 
 
