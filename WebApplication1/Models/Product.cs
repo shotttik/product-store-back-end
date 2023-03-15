@@ -11,6 +11,8 @@ namespace WebApplication1.Models
         public int Quantity { get; set; } = 0;
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; } = 0;
+        public string? Image { get; set; }
+        public string? Document { get; set; }
 
         public List<UserProduct>? Users { get; set; }
     }
