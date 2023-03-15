@@ -34,17 +34,18 @@ namespace WebApplication1.Controllers
             }
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-            var fullPath = Path.Combine(pathToSave, fileName);
             var dbPath = Path.Combine(folderName, fileName);
+            var fullPath = Path.Combine(pathToSave, fileName);
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
                 file.CopyTo(stream);
             }
             if(IsImage)
             {
-                var thumbPath = Path.Combine(pathToSave, "Thumbnails");
-                var thumbFilePath = Path.Combine(thumbPath, fileName);
-                Utils.GenerateThumbnail(fullPath, thumbFilePath);
+                string [] paths = { Directory.GetCurrentDirectory(), folderName, "Thumbnails", fileName };
+                dbPath = Path.Combine(paths.Skip(1).ToArray());
+                var thumbPath = Path.Combine(paths);
+                Utils.GenerateThumbnail(fullPath, thumbPath);
             }
             return Ok(new { dbPath });
         }
