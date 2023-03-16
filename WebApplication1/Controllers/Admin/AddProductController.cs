@@ -33,8 +33,6 @@ namespace WebApplication1.Controllers.Admin
                 var dbPoduct = await _context.Products.FindAsync(data.ID);
 
                 if (dbPoduct == null) return JsonConvert.SerializeObject(response);
-                Console.WriteLine(data.Document);
-                Console.WriteLine(data.Image);
                 dbPoduct.Name = data.Name;
                 dbPoduct.Price = data.Price;
                 dbPoduct.Quantity = data.Quantity;
